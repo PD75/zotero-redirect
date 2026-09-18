@@ -1,16 +1,47 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+<meta charset="utf-8">
+<title>Opening in Zotero…</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: #fafafa;
+    color: #444;
+  }
+  .box { text-align: center; }
+  a { color: #666; }
+</style>
 </head>
-
 <body>
-  <script>
-    const target = new URLSearchParams(window.location.search).get("to");
-    if (target) window.location.replace(target);
-  </script>
-  Redirecting to Zotero…
-</body>
+<div class="box">
+  <p id="msg">Opening in Zotero…</p>
+  <p id="fallback" style="display:none; font-size: 0.9em;">
+    Nothing happened? <a id="manual-link" href="#">Click here</a>.
+  </p>
+</div>
+<script>
+  // Usage: https://your-host/?to=zotero%3A%2F%2Fselect%2Flibrary%2Fitems%2FXXXX
+  // The target URL must be passed URL-encoded in the "to" query parameter.
+  var params = new URLSearchParams(window.location.search);
+  var target = params.get("to");
 
+  if (!target) {
+    document.getElementById("msg").textContent = "No target URL provided (missing ?to= parameter).";
+  } else {
+    document.getElementById("manual-link").href = target;
+    window.location.replace(target);
+    // If the browser blocks the automatic redirect (no prompt shown, or the
+    // protocol handler isn't registered), show a manual fallback link.
+    setTimeout(function () {
+      document.getElementById("fallback").style.display = "block";
+    }, 1200);
+  }
+</script>
+</body>
 </html>
