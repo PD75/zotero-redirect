@@ -36,9 +36,14 @@
   } else {
     document.getElementById("manual-link").href = target;
     window.location.replace(target);
-    // If the browser blocks the automatic redirect (no prompt shown, or the
-    // protocol handler isn't registered), show a manual fallback link.
+    // Give the "Open Zotero?" browser prompt a moment to appear before we
+    // try anything else — closing too early can dismiss it.
     setTimeout(function () {
+      // Browsers only allow a script to close a tab it opened itself (or a
+      // freshly-opened tab with no other history) — this works when Notion
+      // opens the link in a new tab, but silently does nothing otherwise,
+      // in which case the fallback link below stays visible instead.
+      window.close();
       document.getElementById("fallback").style.display = "block";
     }, 1200);
   }
